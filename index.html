@@ -7,148 +7,183 @@
   <meta name="description" content="백화점·아울렛·로드숍 재고조사 전문기업 - 15년 이상의 현장 전문가와 PDA 재고조사로 정확한 데이터를 제공합니다." />
   <link rel="stylesheet" href="assets/styles.css" />
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="brand">
+  <a class="skip-link" href="#main">본문으로 바로가기</a>
+  <header class="site-header container">
+    <div class="brand">
+      <!-- 공식 로고 파일이 있으면 아래 img src를 assets/logo.png로 교체하세요. 로고가 없으면 텍스트 로고가 표시됩니다. -->
+      <img src="assets/logo.png" alt="Stock One logo" onerror="this.style.display='none'" class="logo">
+      <div class="brand-text">
         <h1>스탁원</h1>
         <p class="tag">재고조사 전문기업</p>
       </div>
-      <nav class="nav">
-        <a href="#about">회사소개</a>
-        <a href="#strengths">핵심 경쟁력</a>
-        <a href="#services">서비스</a>
-        <a href="#works">작업 현장</a>
-        <a href="#contact" class="cta">견적 문의</a>
-      </nav>
     </div>
+    <nav class="nav">
+      <a href="#about">회사소개</a>
+      <a href="#strengths">강점</a>
+      <a href="#services">서비스</a>
+      <a href="#works">작업 현장</a>
+      <a href="#contact" class="cta">견적 문의</a>
+    </nav>
   </header>
 
-  <main>
+  <main id="main">
     <section class="hero">
-      <div class="hero-inner container">
-        <h2>정확한 재고데이터, 신뢰받는 현장 전문가</h2>
-        <p>백화점·아울렛·로드숍의 재고조사, 15년 이상의 경력 보유 전문가가 PDA를 사용해 빠르고 정확하게 제공합니다.</p>
-        <a href="#contact" class="button">견적 문의하기</a>
+      <div class="hero-overlay"></div>
+      <div class="hero-content container">
+        <h2>정확한 재고데이터, 신뢰의 기준</h2>
+        <p class="lead">백화점·아울렛·로드숍 재고조사 전문, 15년 이상의 현장 전문가와 PDA 기반 워크플로로 빠르고 정확한 결과를 제공합니다.</p>
+        <div class="hero-actions">
+          <a href="#contact" class="button primary">견적 문의</a>
+          <a href="#services" class="button ghost">서비스 안내</a>
+        </div>
       </div>
     </section>
 
     <section id="about" class="section container">
-      <h3>회사 소개</h3>
-      <div class="about-grid">
-        <p>스탁원은 유통업계의 재고조사에 특화된 전문 기업입니다. 백화점, 아울렛, 로드숍 등 다양한 매장 환경에서 15년 이상의 현장 경험을 가진 전문가들이 PDA 기반의 체계적인 재고조사를 수행합니다. 정확한 데이터 제공을 통해 매장 운영의 효율성과 손실 관리를 돕습니다.</p>
-        <ul>
-          <li>설립: 20XX년</li>
-          <li>경력: 현장 전문가 15년 이상</li>
-          <li>대상: 백화점 / 아울렛 / 로드숍</li>
-        </ul>
-      </div>
-    </section>
-
-    <section id="strengths" class="section alt">
-      <div class="container">
-        <h3>핵심 경쟁력</h3>
-        <div class="strengths-grid">
-          <div class="card">
-            <h4>현장 전문가</h4>
-            <p>15년 이상의 풍부한 현장 경험을 보유한 팀이 정확하고 빠른 재고조사를 수행합니다.</p>
+      <div class="section-grid">
+        <div class="text">
+          <h3>회사 소개</h3>
+          <p>스탁원(Stock One)은 유통업계 재고조사에 특화된 B2B 전문기업입니다. 백화점, 아울렛, 로드숍 등 다양한 리테일 환경에서 15년 이상 현장 경험을 쌓은 전문가들이 체계적인 조사 프로세스를 통해 신뢰할 수 있는 재고 데이터를 제공합니다. PDA 장비를 활용한 디지털 조사로 오류를 최소화하며, 엑셀/CSV 형태의 정밀한 리포트를 제공합니다.</p>
+          <ul class="highlights">
+            <li>설립: 20XX년</li>
+            <li>현장 전문가 경력: 평균 15년 이상</li>
+            <li>대상: 백화점·아울렛·로드숍</li>
+            <li>장비: PDA 기반 데이터 수집</li>
+          </ul>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <strong>15+</strong>
+            <span>년 경력 현장 전문가</span>
           </div>
-          <div class="card">
-            <h4>PDA 기반 조사</h4>
-            <p>PDA(모바일 단말기)를 활용한 디지털 조사로 실시간 데이터 수집 및 오류 최소화가 가능합니다.</p>
+          <div class="stat">
+            <strong>1000+</strong>
+            <span>개 매장 조사 실적</span>
           </div>
-          <div class="card">
-            <h4>정확한 데이터</h4>
-            <p>철저한 검수와 이중 확인 프로세스로 신뢰도 높은 재고 데이터를 제공합니다.</p>
-          </div>
-          <div class="card">
-            <h4>안전한 관리</h4>
-            <p>데이터 보안과 개인정보 보호를 최우선으로 합니다.</p>
+          <div class="stat">
+            <strong>실시간</strong>
+            <span>PDA 데이터 수집</span>
           </div>
         </div>
       </div>
     </section>
 
+    <section id="strengths" class="section alt container">
+      <h3>핵심 경쟁력</h3>
+      <div class="cards">
+        <article class="card">
+          <h4>현장 전문성</h4>
+          <p>15년 이상 경력의 현장 전문가들이 정확하고 효율적인 조사를 수행합니다. 숙련된 조사 노하우로 변동 상황에도 안정적으로 대응합니다.</p>
+        </article>
+        <article class="card">
+          <h4>PDA 기반 데이터 수집</h4>
+          <p>PDA(모바일 단말기)를 활용한 표준화된 입력 방식으로 데이터 오류를 최소화하고, 빠른 집계를 지원합니다.</p>
+        </article>
+        <article class="card">
+          <h4>정밀한 리포트</h4>
+          <p>엑셀(CSV) 형태의 상세 리포트 제공으로 ERP 연동 및 내부 분석에 바로 활용할 수 있습니다.</p>
+        </article>
+        <article class="card">
+          <h4>보안 및 개인정보 보호</h4>
+          <p>수집 데이터는 암호화 및 내부 권한 관리로 안전하게 보관됩니다.</p>
+        </article>
+      </div>
+    </section>
+
     <section id="services" class="section container">
       <h3>재고조사 서비스</h3>
-      <div class="services-grid">
-        <article class="service">
+      <div class="services-list">
+        <div class="service">
           <h4>정기 재고조사</h4>
-          <p>매장별 정기 재고조사로 재고 정확성 유지 및 매출 누락 방지.</p>
-        </article>
-        <article class="service">
-          <h4>긴급 전수조사</h4>
-          <p>프로모션 전/후 혹은 재고 이슈 발생 시 신속한 전수조사 제공.</p>
-        </article>
-        <article class="service">
-          <h4>부분조사/시료조사</h4>
-          <p>필요 구간만 선택하여 비용 효율적으로 조사 진행.</p>
-        </article>
-        <article class="service">
-          <h4>데이터 리포트</h4>
-          <p>CSV/엑셀 형식의 정밀한 리포트와 분석 자료 제공.</p>
-        </article>
+          <p>매장별 맞춤형 주기 설정으로 재고 정확성 유지 및 손실 방지.</p>
+        </div>
+        <div class="service">
+          <h4>전수조사 (긴급)</h4>
+          <p>프로모션 전후, 시즌 오프 등 전수조사가 필요한 경우 신속하게 대응합니다.</p>
+        </div>
+        <div class="service">
+          <h4>부분조사 / 샘플조사</h4>
+          <p>지정 구역 또는 품목에 대한 부분조사로 비용 효율적인 대응이 가능합니다.</p>
+        </div>
+        <div class="service">
+          <h4>데이터 리포팅 & 연계</h4>
+          <p>엑셀/CSV 리포트 제공, 필요시 ERP 및 내부 시스템 연계 방안 컨설팅을 제공합니다.</p>
+        </div>
       </div>
     </section>
 
     <section id="works" class="section alt container">
       <h3>작업 현장</h3>
-      <div class="works-grid">
+      <p class="muted">현장 사진은 실제 스탁원 제공 사진으로 교체하시기 바랍니다. 아래 이미지는 자리표시자입니다.</p>
+      <div class="works-gallery">
+        <!-- 요청하신: 한국인 남성 직원 2명이 일반 캐주얼 복장으로 재고조사하는 모습의 실제 사진을 assets/work-crew.jpg로 업로드하세요. 현재는 자리표시자 이미지입니다. -->
         <figure>
-          <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=800&q=60" alt="현장 조사 이미지 1">
-          <figcaption>백화점 재고조사</figcaption>
+          <img src="assets/work-crew.jpg" alt="작업 현장 - 직원 2명 재고조사 (실제 사진으로 교체 필요)">
+          <figcaption>현장: 재고조사 진행 중 (실제 사진으로 교체하세요)</figcaption>
         </figure>
         <figure>
-          <img src="https://images.unsplash.com/photo-1581092334478-7b2b1b6f7d16?auto=format&fit=crop&w=800&q=60" alt="현장 조사 이미지 2">
-          <figcaption>아울렛 전수조사</figcaption>
+          <img src="https://images.unsplash.com/photo-1520975698519-8b2d6b611a5d?auto=format&fit=crop&w=1000&q=60" alt="PDA 장비를 사용하는 현장">
+          <figcaption>PDA 기반 데이터 수집</figcaption>
         </figure>
         <figure>
-          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=60" alt="현장 조사 이미지 3">
-          <figcaption>로드숍 점검</figcaption>
+          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1000&q=60" alt="매장 내부 작업 이미지">
+          <figcaption>매장 점검 모습</figcaption>
         </figure>
       </div>
     </section>
 
     <section id="contact" class="section contact container">
       <h3>견적 문의</h3>
-      <p>아래 양식을 작성해주시면 빠르게 연락드리겠습니다.</p>
-      <form id="inquiryForm" class="form">
+      <p>견적 문의는 아래 양식을 통해 접수 가능합니다. 자동 접수(웹훅/폼 엔드포인트)가 설정되어 있으면 해당 방식으로 접수됩니다. 자동 접수가 설정되어 있지 않으면 아래 안내 이메일로 직접 문의해 주세요.</p>
+
+      <div id="formStatus" class="form-status"></div>
+
+      <form id="inquiryForm" class="form" novalidate>
         <div class="form-grid">
           <label>회사명<input type="text" name="company" placeholder="회사명을 입력하세요" required></label>
-          <label>담당자<input type="text" name="name" placeholder="담당자명" required></label>
+          <label>담당자<input type="text" name="contactName" placeholder="담당자명" required></label>
           <label>연락처<input type="tel" name="phone" placeholder="010-1234-5678" required></label>
           <label>매장 유형
             <select name="storeType" required>
               <option value="">선택하세요</option>
-              <option>백화점</option>
-              <option>아울렛</option>
-              <option>로드숍</option>
-              <option>기타</option>
+              <option value="department">백화점</option>
+              <option value="outlet">아울렛</option>
+              <option value="roadshop">로드숍</option>
+              <option value="other">기타</option>
             </select>
           </label>
           <label>매장 수<input type="number" name="storeCount" min="1" placeholder="예: 5" required></label>
           <label>희망 일정<input type="text" name="schedule" placeholder="예: 2026-11-01 ~ 2026-11-05" required></label>
         </div>
         <label class="full">문의 내용<textarea name="message" rows="6" placeholder="조사 대상, 특이사항 등을 적어주세요." required></textarea></label>
-        <p class="form-note">※ 제출 시 기본 검수 후 담당자가 연락드립니다.</p>
+
         <div class="form-actions">
-          <button type="submit" class="button primary">문의 보내기</button>
+          <button id="submitBtn" type="submit" class="button primary">문의 보내기</button>
           <button type="reset" class="button ghost">초기화</button>
         </div>
       </form>
-      <p class="contact-info">이메일: contact@stockone.co.kr &nbsp;|&nbsp; 전화: 02-000-0000</p>
+
+      <p class="muted">직접 문의: <a href="mailto:contact@stockone.co.kr">contact@stockone.co.kr</a> &nbsp;|&nbsp; 전화: 02-000-0000</p>
+      <p class="note">주의: 자동 접수(서버 연동)는 기본 비활성 상태입니다. 관리자가 assets/config.js에 FORM_ENDPOINT를 설정하면 자동 접수가 활성화됩니다.</p>
     </section>
 
   </main>
 
   <footer class="site-footer">
     <div class="container">
+      <nav class="foot-nav">
+        <a href="#about">회사소개</a>
+        <a href="#services">서비스</a>
+        <a href="#contact">견적 문의</a>
+      </nav>
       <p>© 스탁원 (Stock One). All Rights Reserved.</p>
     </div>
   </footer>
 
+  <script src="assets/config.js"></script>
   <script src="assets/script.js"></script>
 </body>
 </html>
