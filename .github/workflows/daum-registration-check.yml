@@ -27,9 +27,13 @@ jobs:
             await p.locator('#url2').fill('a62992063-afk.github.io/stockone-homepage/');
             await p.getByRole('button',{name:'확인',exact:true}).first().click();
             await p.waitForTimeout(1500);
+            await p.locator('input[name="agree"]').nth(0).check();
+            await p.locator('input[name="agree"]').nth(1).check();
+            await p.getByRole('button',{name:'확인',exact:true}).click();
+            await p.waitForTimeout(1000);
             console.log('CURRENT_URL '+p.url());
             console.log('FORM_TEXT '+(await p.locator('body').innerText()).slice(0,12000));
-            console.log('FORM_FIELDS '+JSON.stringify(await p.locator('input:not([type=hidden]),select,button').evaluateAll(xs=>xs.map(x=>({tag:x.tagName,type:x.type,id:x.id,name:x.name,placeholder:x.placeholder,text:x.innerText,visible:!!(x.offsetWidth||x.offsetHeight||x.getClientRects().length)})))));
+            console.log('FORM_FIELDS '+JSON.stringify(await p.locator('input:not([type=hidden]),select,button').evaluateAll(xs=>xs.map(x=>({tag:x.tagName,type:x.type,id:x.id,name:x.name,placeholder:x.placeholder,text:x.innerText,options:x.tagName==='SELECT'?Array.from(x.options).map(o=>({text:o.text,value:o.value})):undefined,visible:!!(x.offsetWidth||x.offsetHeight||x.getClientRects().length)})))));
             await b.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           JS
