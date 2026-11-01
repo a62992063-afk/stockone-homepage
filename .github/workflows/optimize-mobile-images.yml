@@ -1,0 +1,106 @@
+name: Optimize and validate mobile images
+on:
+  push:
+    branches: [fix-mobile-image-decoding]
+    paths: ['.github/workflows/optimize-mobile-images.yml']
+permissions:
+  contents: write
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Optimize image assets
+        run: |
+          pip install pillow
+          cat > /tmp/optimize.py <<'PY'
+          import re,base64,io,json
+          from pathlib import Path
+          from PIL import Image,ImageOps
+          output=Path('assets/mobile');output.mkdir(parents=True,exist_ok=True)
+          cache={}
+          results=[]
+          for filename in ['index.html','contact.html']:
+              text=Path(filename).read_text()
+              def replace(match):
+                  tag=match.group(0)
+                  sm=re.search(r'src="([^"]+)"',tag)
+                  if not sm:return tag
+                  src=sm.group(1)
+                  if src.startswith('data:image/jpeg;base64,'):
+                      name='stockone-logo.webp'
+                      original=base64.b64decode(src.split(',',1)[1])
+                      maximum=549
+                  elif src.startswith('assets/'):
+                      source=Path(src)
+                      if not source.exists():raise RuntimeError('Missing asset '+src)
+                      name=source.stem+'.webp'
+                      original=source.read_bytes()
+                      maximum=240 if 'partner-logos/' in src else 720
+                  else:return tag
+                  target=output/name
+                  if str(target) not in cache:
+                      image=ImageOps.exif_transpose(Image.open(io.BytesIO(original))).convert('RGB')
+                      image.thumbnail((maximum,maximum*3),Image.Resampling.LANCZOS)
+                      image.save(target,'WEBP',quality=86,method=6)
+                      with Image.open(target) as check:check.load()
+                      cache[str(target)]=image.size
+                      results.append({'path':str(target),'before':len(original),'after':target.stat().st_size,'width':image.width,'height':image.height})
+                  w,h=cache[str(target)]
+                  tag=tag.replace(sm.group(0),'src="'+str(target)+'"')
+                  tag=re.sub(r'\s(?:loading|decoding|fetchpriority|width|height)="[^"]*"','',tag)
+                  if name=='stockone-logo.webp':
+                      return tag[:-1]+' width="'+str(w)+'" height="'+str(h)+'">'
+                  return tag[:-1]+' width="'+str(w)+'" height="'+str(h)+'" decoding="async">'
+              text=re.sub(r'<img\b[^>]*>',replace,text)
+              if 'data:image/' in text:raise RuntimeError('Embedded image remains')
+              Path(filename).write_text(text)
+          print('IMAGE_OPTIMIZATION '+json.dumps(results))
+          print('TOTAL_BYTES '+str(sum(x['before'] for x in results))+' -> '+str(sum(x['after'] for x in results)))
+          PY
+          python /tmp/optimize.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate scrolling
+        run: |
+          npm install --prefix /tmp/mobile-qa playwright pngjs
+          /tmp/mobile-qa/node_modules/.bin/playwright install --with-deps chromium
+          python -m http.server 8000 --bind 127.0.0.1 >/tmp/stockone-server.log 2>&1 &
+          cat > /tmp/mobile-qa/check.cjs <<'JS'
+          const {chromium}=require('playwright'),{PNG}=require('pngjs');
+          (async()=>{
+            const browser=await chromium.launch();
+            const page=await browser.newPage({viewport:{width:393,height:800},deviceScaleFactor:3,isMobile:true,hasTouch:true});
+            const errors=[];page.on('pageerror',e=>errors.push(e.message));
+            for(const path of ['index.html','contact.html']){
+              await page.goto('http://127.0.0.1:8000/'+path,{waitUntil:'networkidle'});
+              const height=await page.evaluate(()=>document.documentElement.scrollHeight);
+              for(const y of [0,height/2,height, height/2,0]){
+                await page.evaluate(y=>window.scrollTo(0,y),y);
+                await page.waitForTimeout(200);
+                const png=PNG.sync.read(await page.screenshot());
+                let black=0;for(let i=0;i<png.data.length;i+=4)if(png.data[i]<5&&png.data[i+1]<5&&png.data[i+2]<5)black++;
+                if(black/(png.width*png.height)>.9)throw Error('Black viewport '+path);
+              }
+              const images=await page.locator('img').evaluateAll(items=>items.filter(i=>!i.complete||!i.naturalWidth).map(i=>i.getAttribute('src')));
+              if(images.length)throw Error('Broken images '+JSON.stringify(images));
+              if(await page.locator('body').evaluate(e=>e.scrollWidth>innerWidth+1))throw Error('Horizontal overflow '+path);
+              console.log('SCROLL_PASS '+path);
+            }
+            if(errors.length)throw Error(errors.join(';'));
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
+          node /tmp/mobile-qa/check.cjs
+      - name: Save validated assets
+        run: |
+          git config user.name "Stock One site maintenance"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html contact.html assets/mobile
+          git commit -m "Optimize site images for mobile decoding and remove embedded image data"
+          git push origin HEAD:fix-mobile-image-decoding
