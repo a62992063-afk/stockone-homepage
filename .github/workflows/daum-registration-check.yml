@@ -32,7 +32,6 @@ jobs:
             await p.getByRole('button',{name:'확인',exact:true}).click();
             await p.waitForTimeout(1000);
             await p.locator('#title').fill('스탁원');
-            await p.locator('#url').fill('https://a62992063-afk.github.io/stockone-homepage/');
             await p.locator('#desc').fill('매장과 창고의 재고조사 서비스를 안내하는 스탁원 홈페이지');
             await p.locator('#site_desc_category').fill('매장 재고조사, 창고 재고조사, 정기 재고실사');
             await p.locator('input[name="reg_name"]').fill('songeunmi');
