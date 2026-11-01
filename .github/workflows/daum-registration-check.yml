@@ -52,7 +52,7 @@ jobs:
               }return false;
             }));
             if(selectedIndex<0)throw Error('No exact related category found');
-            await category.locator('input[name="dir_radio"]').nth(selectedIndex).check();
+            try{await category.locator('input[name="dir_radio"]').nth(selectedIndex).check();}catch(e){if(!category.isClosed())throw e;}
             await p.waitForTimeout(500);
             console.log('SELECTED_DIRECTORY '+await p.locator('input[name="dir_path"]').inputValue());
             await p.locator('#regComfirmBtn').click();
