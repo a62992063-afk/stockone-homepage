@@ -99,6 +99,25 @@
 }
 .partner-marquee.motion-offscreen .partner-belt,
 body.page-scrolling .partner-belt{animation-play-state:paused}
+
+/* Use a bounded, static layout on phones to avoid oversized moving layers. */
+@media(max-width:700px){
+ *,*::before,*::after{animation:none!important;transition:none!important;transform:none!important;will-change:auto!important;backdrop-filter:none!important}
+ html,body{max-width:100%;overflow-x:hidden}
+ .header{position:relative!important}
+ .partner-marquee{overflow:visible;width:100%;margin-top:24px}
+ .partner-belt{display:block;width:100%;max-width:100%}
+ .partner-track{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px 12px;width:100%;padding:0}
+ .partner-track[aria-hidden="true"]{display:none!important}
+ .partner-item{display:flex;width:100%;min-width:0;max-width:100%;flex:none}
+ .partner-item img{width:100%;max-width:140px;height:80px;object-fit:contain;filter:none}
+ .partner-item small{font-size:9px;line-height:1.6;text-align:center;overflow-wrap:anywhere}
+ .partner-motion{display:none}
+ .hero-photo,.work-photo,.card-art.service-photo{position:relative;max-width:100%;contain:paint}
+ .hero-photo img,.work-photo img,.service-photo img{max-width:100%;filter:none}
+ .float{position:static;display:flex;width:fit-content;max-width:calc(100% - 46px);margin:18px auto;right:auto;bottom:auto}
+ .footer{padding-bottom:35px}
+}
 </style>
 </head>
 <body class="contact-page">
