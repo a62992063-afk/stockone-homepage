@@ -85,6 +85,20 @@
 .contact-page-form .btn.blue:hover{background:#3c65a3}
 .contact-page .footer{background:#1c2738}
 @media(max-width:700px){.contact-page-wrap{padding:28px 25px 60px}.contact-page h1{font-size:38px}.contact-intro{font-size:15px}.contact-methods{margin:22px 0 42px}.contact-method span{font-size:15px}.contact-first-row{grid-template-columns:1fr 1fr;gap:12px}.contact-page-form label{font-size:13px}.contact-page-form input,.contact-page-form textarea{font-size:15px;padding:17px 16px;min-height:60px;border-radius:16px}.contact-page-form .consent-check input{min-height:20px}.contact-page-form .consent-check{font-size:12px}}
+
+/* Reduce mobile repaint work during scrolling. */
+@media(max-width:700px){
+ html{scroll-behavior:auto}
+ .header{position:relative;top:auto;background-color:#fff}
+ .hero,.services,.strip,.banner,.partners-section,.contact,.float,.btn.blue,.header .btn.dark,.card-art{background-image:none}
+ .hero:after{display:none}
+ .hero-photo,.work-photo,.card,.btn,.float,.visual-tag{box-shadow:none}
+ .hero-photo figcaption{background:#102a48}
+ .hero-photo,.work-photo,.service-photo{isolation:auto}
+ .contact-page .header{background:#fff}
+}
+.partner-marquee.motion-offscreen .partner-belt,
+body.page-scrolling .partner-belt{animation-play-state:paused}
 </style>
 </head>
 <body class="contact-page">
