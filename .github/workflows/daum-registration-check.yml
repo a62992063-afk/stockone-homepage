@@ -31,6 +31,17 @@ jobs:
             await p.locator('input[name="agree"]').nth(1).check();
             await p.getByRole('button',{name:'확인',exact:true}).click();
             await p.waitForTimeout(1000);
+            await p.locator('#title').fill('스탁원');
+            await p.locator('#url').fill('https://a62992063-afk.github.io/stockone-homepage/');
+            await p.locator('#desc').fill('매장과 창고의 재고조사 서비스를 안내하는 스탁원 홈페이지');
+            await p.locator('#site_desc_category').fill('매장 재고조사, 창고 재고조사, 정기 재고실사');
+            await p.locator('input[name="reg_name"]').fill('songeunmi');
+            await p.locator('input[name="email1"]').fill('stockone0615');
+            await p.locator('select[name="email3"]').selectOption('gmail.com');
+            console.log('CATEGORY_LINKS '+JSON.stringify(await p.locator('input[name="dir_path"]').locator('..').evaluate(e=>({text:e.innerText,links:Array.from(e.querySelectorAll('a,button')).map(a=>({tag:a.tagName,text:a.innerText,href:a.getAttribute('href'),onclick:a.getAttribute('onclick')}))}))));
+            await p.locator('input[name="dir_path"]').locator('..').getByText('검색',{exact:true}).click();
+            await p.waitForTimeout(1000);
+            for(const view of p.context().pages()){console.log('CATEGORY_VIEW '+view.url());console.log('CATEGORY_BODY '+(await view.locator('body').innerText()).slice(0,16000));console.log('CATEGORY_FIELDS '+JSON.stringify(await view.locator('input:not([type=hidden]),select,button,a').evaluateAll(xs=>xs.filter(x=>x.offsetWidth||x.offsetHeight||x.getClientRects().length).map(x=>({tag:x.tagName,type:x.type,id:x.id,name:x.name,text:x.innerText,href:x.getAttribute('href'),onclick:x.getAttribute('onclick')})))));}
             console.log('CURRENT_URL '+p.url());
             console.log('FORM_TEXT '+(await p.locator('body').innerText()).slice(0,12000));
             console.log('FORM_FIELDS '+JSON.stringify(await p.locator('input:not([type=hidden]),select,button').evaluateAll(xs=>xs.map(x=>({tag:x.tagName,type:x.type,id:x.id,name:x.name,placeholder:x.placeholder,text:x.innerText,options:x.tagName==='SELECT'?Array.from(x.options).map(o=>({text:o.text,value:o.value})):undefined,visible:!!(x.offsetWidth||x.offsetHeight||x.getClientRects().length)})))));
