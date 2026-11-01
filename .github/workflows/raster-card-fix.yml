@@ -1,0 +1,86 @@
+name: Validate inventory card raster fix
+on:
+  push:
+    branches: [fix-mobile-raster-layers]
+    paths: ['.github/workflows/raster-card-fix.yml']
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare compatible card images
+        run: |
+          pip install pillow
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image,ImageOps
+          import re
+          sources=['assets/service-warehouse.jpg','assets/service-inventory-report.jpg','assets/inventory-scan.jpg','assets/inventory-count.png']
+          text=Path('index.html').read_text()
+          out=Path('assets/compatibility');out.mkdir(exist_ok=True)
+          for source in sources:
+              path=Path(source)
+              image=ImageOps.exif_transpose(Image.open(path)).convert('RGB')
+              image.thumbnail((720,1440),Image.Resampling.LANCZOS)
+              dest=out/(path.stem+'.png')
+              image.save(dest,'PNG',optimize=True)
+              old='assets/mobile/'+path.stem+'.webp'
+              if old not in text:raise RuntimeError('Expected image missing: '+old)
+              text=text.replace(old,str(dest))
+              print('COMPATIBLE_IMAGE',str(dest),image.size,dest.stat().st_size)
+          css='''
+/* Isolate inventory-card paint layers on mobile. */
+@media(max-width:700px){
+.services,.work-section{position:relative;isolation:isolate;overflow:hidden}
+.cards .card,.work-grid figure{position:relative;z-index:0;transform:translateZ(0);backface-visibility:hidden}
+}
+'''
+          text=text.replace('</style>',css+'</style>')
+          Path('index.html').write_text(text)
+          PY
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate inventory cards while scrolling
+        run: |
+          npm install --prefix /tmp/card-test playwright pngjs
+          /tmp/card-test/node_modules/.bin/playwright install --with-deps chromium
+          python -m http.server 8000 --bind 127.0.0.1 >/tmp/card-server.log 2>&1 &
+          cat > /tmp/card-test/test.cjs <<'JS'
+          const {chromium}=require('playwright'),{PNG}=require('pngjs');
+          (async()=>{
+            const browser=await chromium.launch();
+            const page=await browser.newPage({viewport:{width:393,height:800},deviceScaleFactor:3,isMobile:true,hasTouch:true});
+            const errors=[];page.on('pageerror',e=>errors.push(e.message));
+            await page.goto('http://127.0.0.1:8000/',{waitUntil:'networkidle'});
+            for(let repeat=0;repeat<3;repeat++){
+              for(const target of ['.work-section','.card:nth-child(3)','.card:nth-child(2)','.work-section']){
+                await page.locator(target).scrollIntoViewIfNeeded();
+                await page.waitForTimeout(150);
+                const png=PNG.sync.read(await page.screenshot());
+                let black=0;for(let i=0;i<png.data.length;i+=4)if(png.data[i]<5&&png.data[i+1]<5&&png.data[i+2]<5)black++;
+                if(black/(png.width*png.height)>.9)throw Error('Black card viewport');
+              }
+            }
+            const failures=await page.locator('img').evaluateAll(items=>items.filter(i=>!i.complete||!i.naturalWidth).map(i=>i.getAttribute('src')));
+            if(failures.length||errors.length)throw Error(JSON.stringify({failures,errors}));
+            const cards=await page.locator('.card').evaluateAll(items=>items.map(e=>({title:e.querySelector('h3').textContent,top:e.getBoundingClientRect().top,height:e.getBoundingClientRect().height})));
+            for(let i=1;i<cards.length;i++)if(cards[i].top<cards[i-1].top+cards[i-1].height)throw Error('Cards overlap');
+            console.log('CARD_SCROLL_PASS '+JSON.stringify(cards));
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
+          node /tmp/card-test/test.cjs
+      - name: Save validated card fix
+        run: |
+          git config user.name "Stock One site maintenance"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html assets/compatibility
+          git commit -m "Use PNG assets and isolated mobile layers for affected inventory cards"
+          git push origin HEAD:fix-mobile-raster-layers
