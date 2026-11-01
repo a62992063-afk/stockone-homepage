@@ -21,7 +21,7 @@ jobs:
           const {chromium}=require('playwright');
           (async()=>{
             const b=await chromium.launch();const p=await b.newPage();
-            p.on('dialog',async d=>{console.log('FORM_ALERT '+d.message());await d.dismiss()});
+            p.on('dialog',async d=>{console.log('FORM_ALERT '+d.message());if(d.type()==='confirm'&&/등록|신청/.test(d.message()))await d.accept();else await d.dismiss()});
             const r=await p.goto('https://register.search.daum.net/searchForm.daum?act=insert',{waitUntil:'networkidle',timeout:45000});
             console.log('HTTP_STATUS '+r.status());
             await p.locator('#url2').fill('a62992063-afk.github.io/stockone-homepage/');
@@ -44,6 +44,21 @@ jobs:
             await category.locator('input[name="dirKeyword"]').fill('경영');
             await category.getByRole('button',{name:'확인',exact:true}).click();
             await category.waitForTimeout(500);
+            const selectedIndex=await category.locator('input[name="dir_radio"]').evaluateAll(xs=>xs.findIndex(x=>{
+              let e=x.parentElement;const wanted='비즈니스,쇼핑>컨설팅>경영컨설팅';
+              while(e&&e.querySelectorAll('input[name="dir_radio"]').length===1){
+                if(e.textContent.replace(/\\s+/g,'')===wanted)return true;
+                e=e.parentElement;
+              }return false;
+            }));
+            if(selectedIndex<0)throw Error('No exact related category found');
+            await category.locator('input[name="dir_radio"]').nth(selectedIndex).check();
+            await p.waitForTimeout(500);
+            console.log('SELECTED_DIRECTORY '+await p.locator('input[name="dir_path"]').inputValue());
+            await p.locator('#regComfirmBtn').click();
+            await p.waitForTimeout(1500);
+            console.log('SUBMISSION_PAGE '+p.url());
+            console.log('SUBMISSION_TEXT '+await p.locator('body').innerText());
             for(const view of p.context().pages()){console.log('CATEGORY_VIEW '+view.url());console.log('CATEGORY_BODY '+(await view.locator('body').innerText()).slice(0,16000));console.log('CATEGORY_FIELDS '+JSON.stringify(await view.locator('input:not([type=hidden]),select,button,a').evaluateAll(xs=>xs.filter(x=>x.offsetWidth||x.offsetHeight||x.getClientRects().length).map(x=>({tag:x.tagName,type:x.type,id:x.id,name:x.name,text:x.innerText,href:x.getAttribute('href'),onclick:x.getAttribute('onclick')})))));}
             console.log('CURRENT_URL '+p.url());
             console.log('FORM_TEXT '+(await p.locator('body').innerText()).slice(0,12000));
