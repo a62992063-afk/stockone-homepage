@@ -40,6 +40,10 @@ jobs:
             console.log('CATEGORY_LINKS '+JSON.stringify(await p.locator('input[name="dir_path"]').locator('..').evaluate(e=>({text:e.innerText,links:Array.from(e.querySelectorAll('a,button')).map(a=>({tag:a.tagName,text:a.innerText,href:a.getAttribute('href'),onclick:a.getAttribute('onclick')}))}))));
             await p.locator('input[name="dir_path"]').locator('..').getByText('검색',{exact:true}).click();
             await p.waitForTimeout(1000);
+            const category=p.context().pages().find(view=>view.url().includes('categoryDepthSearch'));
+            await category.locator('input[name="dirKeyword"]').fill('재고조사');
+            await category.getByRole('button',{name:'확인',exact:true}).click();
+            await category.waitForTimeout(500);
             for(const view of p.context().pages()){console.log('CATEGORY_VIEW '+view.url());console.log('CATEGORY_BODY '+(await view.locator('body').innerText()).slice(0,16000));console.log('CATEGORY_FIELDS '+JSON.stringify(await view.locator('input:not([type=hidden]),select,button,a').evaluateAll(xs=>xs.filter(x=>x.offsetWidth||x.offsetHeight||x.getClientRects().length).map(x=>({tag:x.tagName,type:x.type,id:x.id,name:x.name,text:x.innerText,href:x.getAttribute('href'),onclick:x.getAttribute('onclick')})))));}
             console.log('CURRENT_URL '+p.url());
             console.log('FORM_TEXT '+(await p.locator('body').innerText()).slice(0,12000));
