@@ -47,7 +47,7 @@ jobs:
             const selectedIndex=await category.locator('input[name="dir_radio"]').evaluateAll(xs=>xs.findIndex(x=>{
               let e=x.parentElement;const wanted='비즈니스,쇼핑>컨설팅>경영컨설팅';
               while(e&&e.querySelectorAll('input[name="dir_radio"]').length===1){
-                if(e.textContent.replace(/\\s+/g,'')===wanted)return true;
+                if(Array.from(e.textContent).filter(c=>c.charCodeAt(0)>32).join('')===wanted)return true;
                 e=e.parentElement;
               }return false;
             }));
