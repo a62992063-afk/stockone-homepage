@@ -1,0 +1,32 @@
+name: Inspect Daum site registration
+on:
+  push:
+    branches: [search-registration-check]
+    paths: ['.github/workflows/daum-registration-check.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Inspect registration form
+        run: |
+          npm install --prefix /tmp/registration playwright
+          /tmp/registration/node_modules/.bin/playwright install --with-deps chromium
+          cat > /tmp/registration/check.cjs <<'JS'
+          const {chromium}=require('playwright');
+          (async()=>{
+            const b=await chromium.launch();const p=await b.newPage();
+            p.on('dialog',async d=>{console.log('FORM_ALERT '+d.message());await d.dismiss()});
+            const r=await p.goto('https://register.search.daum.net/searchForm.daum?act=insert',{waitUntil:'networkidle',timeout:45000});
+            console.log('HTTP_STATUS '+r.status());
+            console.log('FORM_TEXT '+(await p.locator('body').innerText()).slice(0,12000));
+            console.log('FORM_FIELDS '+JSON.stringify(await p.locator('input:not([type=hidden]),select,button').evaluateAll(xs=>xs.map(x=>({tag:x.tagName,type:x.type,id:x.id,name:x.name,placeholder:x.placeholder,text:x.innerText,visible:!!(x.offsetWidth||x.offsetHeight||x.getClientRects().length)})))));
+            await b.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
+          node /tmp/registration/check.cjs
