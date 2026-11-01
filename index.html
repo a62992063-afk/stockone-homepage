@@ -37,6 +37,24 @@
 @keyframes partner-scroll-right{from{transform:translateX(-50%)}to{transform:translateX(0)}}
 @media(max-width:700px){.partner-item{flex-basis:140px;width:140px}.partner-item img{width:140px;height:95px}.partner-track{gap:20px;padding-right:20px}}
 @media(prefers-reduced-motion:reduce){.partner-belt{animation:none;width:auto}.partner-track{flex-wrap:wrap;justify-content:center;padding:0}.partner-track[aria-hidden=true]{display:none}.partner-motion{display:none}}
+
+/* Preserve readable colors when gradient images are unavailable. */
+.hero{background-color:#102a48}
+.btn.blue,.header .btn.dark,.contact-page .header .btn.dark,.contact-page-form .btn.blue{background-color:#285de5}
+.btn.blue:hover,.header .btn.dark:hover{background-color:#194ed1}
+.strip{background-color:#edf2fa}
+.services{background-color:#f3f6fa}
+.card:nth-child(1) .card-art{background-color:#e5f0ff}
+.card:nth-child(2) .card-art{background-color:#ffedda}
+.card:nth-child(3) .card-art{background-color:#eee5ff}
+.banner{background-color:#e5f0ff}
+.partners-section{background-color:#eef2fb}
+.contact{background-color:#173967}
+.contact .btn.blue{background-color:#fff}
+.contact .btn.blue:hover{background-color:#ecf3ff}
+.float{background-color:#285de5}
+.contact-page .contact-screen{background-color:#0e1728}
+.footer-bottom>span{min-width:0;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
