@@ -34,13 +34,7 @@ jobs:
               if old not in text:raise RuntimeError('Expected image missing: '+old)
               text=text.replace(old,str(dest))
               print('COMPATIBLE_IMAGE',str(dest),image.size,dest.stat().st_size)
-          css='''
-/* Isolate inventory-card paint layers on mobile. */
-@media(max-width:700px){
-.services,.work-section{position:relative;isolation:isolate;overflow:hidden}
-.cards .card,.work-grid figure{position:relative;z-index:0;transform:translateZ(0);backface-visibility:hidden}
-}
-'''
+          css='/* Inventory card layers. */@media(max-width:700px){.services,.work-section{position:relative;isolation:isolate;overflow:hidden}.cards .card,.work-grid figure{position:relative;z-index:0;transform:translateZ(0);backface-visibility:hidden}}'
           text=text.replace('</style>',css+'</style>')
           Path('index.html').write_text(text)
           PY
